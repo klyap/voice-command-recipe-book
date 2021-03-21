@@ -16,6 +16,50 @@ export const recipes = [
   //   ],
   // },
   {
+    title: "Basque Cheesecake by Bon Appetit",
+    ingredients: [
+      "2 lb. cream cheese, room temperature",
+      "1½ cups sugar",
+      "6 large eggs",
+      "2 cups heavy cream",
+      "1 tsp. kosher salt",
+      "1 tsp. vanilla extract",
+      "⅓ cup all-purpose flour",
+    ],
+    serving_size: "1 10 inch cake",
+    steps: [
+"Place a rack in middle of oven; preheat to 400°.",
+"Butter pan, then line with 2 overlapping 16x12 inch sheets of parchment, making sure parchment comes at least 2 inches above top of pan on all sides. Because the parchment needs to be pleated and creased in some areas to fit in pan, you won’t end up with a clean, smooth outer edge to the cake; that’s okay! Place pan on a rimmed baking sheet.",
+"Beat cream cheese and sugar in the bowl of a stand mixer fitted with the paddle attachment on medium-low speed, scraping down sides of bowl, until very smooth, no lumps remain, and sugar has dissolved, about 2 minutes.",
+"Increase speed to medium and add eggs one at a time, beating each egg 15 seconds before adding the next. Scrape down sides of bowl, then reduce mixer speed to medium-low.",
+"Add cream, salt, and vanilla and beat until combined, about 30 seconds.",
+"Turn off mixer and sift flour evenly over cream cheese mixture.",
+"Beat on low speed until incorporated, about 15 seconds. Scrape down sides of bowl (yet again) and continue to beat until batter is very smooth, homogenous, and silky, about 10 seconds.",
+"Pour batter into prepared pan. Bake cheesecake until deeply golden brown on top and still very jiggly in the center, 60–65 minutes.",
+"Let cool slightly (it will fall drastically as it cools), then unmold. Let cool completely. Carefully peel away parchment from sides of cheesecake. Slice into wedges and serve at room temperature, preferably with a glass of sherry alongside."
+    ],
+  },
+  {
+    title: "Microwave Mochi",
+    ingredients: [
+      `50g Glutinous rice flour`,
+      `90g Water`,
+      `10g Sugar`,
+      `cornstarch`,
+    ],
+    serving_size: "many mochis",
+    steps: [
+      "In a non-metal bowl mix the glutinous rice flour, water, and sugar until there are no lumps.",
+      "Put the bowl in the microwave and heat it on high heat (1100w) for 1 minute. Take it out and stir with wet rubber spatula.",
+      "Cover again and cook for 1 minute. Stir again.",
+      "Cover and cook for 30 seconds to finish cooking. The color of mochi should change from white to almost translucent.",
+      "Cover the work surface with parchment paper and dust it generously with corn starch.",
+      "Then transfer the cooked mochi on top.",
+      "To prevent from sticking, sprinkle more potato starch on top of the mochi. Once it’s cool down a bit, you can spread the mochi into a thin layer with your hands or with a rolling pin. Make sure to apply potato starch on your hands and the rolling pin. I recommend using a rolling pin because it’s easier to evenly spread out.",
+      "Cut out into small pieces and fill with mango filling"
+    ],
+  },
+  {
     title: "Poached Pear Earl Gray Loaf",
     ingredients: [
       `4 cups water`,
