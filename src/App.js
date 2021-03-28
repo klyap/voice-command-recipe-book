@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import Recipe from './recipe.js';
 import {recipes} from './recipe-db.js';

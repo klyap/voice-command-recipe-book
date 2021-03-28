@@ -29,6 +29,20 @@ p {
   margin: 10px 20px;
 }
 
+.two-col {
+  display: flex;
+
+}
+
+.side {
+  width: 50%;
+}
+
+.float {
+  position: 'absolute';
+  bottom: 0;
+}
+
 .flex {
   display: flex;
 }

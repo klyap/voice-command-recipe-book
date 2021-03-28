@@ -5,15 +5,30 @@ import SpeechRecognition, {
 import { Ingredients } from "./ingredients";
 import { Steps } from "./steps";
 
+const stayAwake = async () => {
+  let wakeLock = null;
+
+  const requestWakeLock = async () => {
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      console.log('Screen Wake Lock is active');
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  await requestWakeLock();
+}
 const Recipe = ({ recipe }) => {
   const { ingredients, title, steps } = recipe;
   const [message, setMessage] = useState("");
-  const [currentStep, setStep] = useState(1);
+  const [currentStep, setStep] = useState(0);
   const [focusedId, setFocusId] = useState();
   const refEl = useRef(null);
   useEffect(() =>
     refEl && refEl.current ? refEl.current.scrollIntoView() : null
   );
+  useEffect(() => stayAwake());
 
   const SECTION = {
     STEP: "step",
@@ -35,6 +50,14 @@ const Recipe = ({ recipe }) => {
   }
 
   const commands = [
+    {
+      command: "Go to *",
+      // command: ["Step *", "Top *", "Stop *"],
+      callback: goToStep,
+      // isFuzzyMatch: true,
+      // fuzzyMatchingThreshold: 0.2,
+      // bestMatchOnly: true,
+    },
     {
       command: "Step *",
       // command: ["Step *", "Top *", "Stop *"],
@@ -64,8 +87,15 @@ const Recipe = ({ recipe }) => {
       callback: goToIngredient,
     },
     {
-      command: ["next", "next step"],
-      callback: () => {console.log('next'); goToStep(currentStep + 1)},
+      command: ["next", "okay"],
+      callback: () => goToStep(currentStep + 1),
+      isFuzzyMatch: true,
+      fuzzyMatchingThreshold: 0.2,
+      bestMatchOnly: true,
+    },
+    {
+      command: ["back",],
+      callback: () => goToStep(currentStep - 1),
       isFuzzyMatch: true,
       fuzzyMatchingThreshold: 0.2,
       bestMatchOnly: true,
@@ -116,33 +146,38 @@ const Recipe = ({ recipe }) => {
     return <p>Your browser doesn't support this</p>;
   }
 
-  return (
-    <div>
-      <h1>Welcome</h1>
-      <button
-        onClick={() => SpeechRecognition.startListening({ continuous: true })}
-      >
-        Start
-      </button>
-      <button onClick={SpeechRecognition.stopListening}>Stop</button>
-      <button onClick={() => goToStep(currentStep + 1)}>Step</button>
-      <button onClick={() => goToIngredient('eggs')}>Ingredient</button>
-      <p>Current step: {currentStep}</p>
-      <p>{message}</p>
-      <p>TRANSCRIPT: {transcript}</p>
-      <h2>{title}</h2>
-      <Ingredients
-        refEl={refEl}
-        focusedId={focusedId}
-        ingredients={ingredients}
-      />
-      <Steps
-        refEl={refEl}
-        focusedId={focusedId}
-        // currentStep={currentStep}
-        steps={steps}
-      />
+
+
+  return (<>
+    <div class="two-col">
+      <div class="side">
+        <h2>{title}</h2>
+        <Ingredients
+          refEl={refEl}
+          focusedId={focusedId}
+          ingredients={ingredients}
+        />
+        <Steps
+          refEl={refEl}
+          focusedId={focusedId}
+          steps={steps}
+        />
+      </div>
+      <div class="side">
+        <button
+          onClick={() => SpeechRecognition.startListening({ continuous: true })}
+        >
+          Start
+        </button>
+        <button onClick={SpeechRecognition.stopListening}>Stop</button>
+        <button onClick={() => goToStep(currentStep + 1)}>Step</button>
+        <button onClick={() => goToIngredient('eggs')}>Ingredient</button>
+        <p>Current step: {currentStep}</p>
+        <p>{message}</p>
+        <p>TRANSCRIPT: {transcript}</p>
+      </div>
     </div>
+    </>
   );
 };
 export default Recipe;
