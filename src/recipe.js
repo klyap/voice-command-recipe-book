@@ -1,49 +1,62 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from 'react'
 import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
-import { Ingredients } from "./ingredients";
-import { Steps } from "./steps";
+  useSpeechRecognition
+} from 'react-speech-recognition'
+import { Ingredients } from './ingredients'
+import { Steps } from './steps'
+
+let wakeLock = null
 
 const stayAwake = async () => {
-  let wakeLock = null;
-
   const requestWakeLock = async () => {
     try {
-      wakeLock = await navigator.wakeLock.request('screen');
-      console.log('Screen Wake Lock is active');
+      wakeLock = await navigator.wakeLock.request('screen')
+      console.log('Screen Wake Lock is active')
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
-  };
+  }
 
-  await requestWakeLock();
+  await requestWakeLock()
+}
+
+const startListening = () => {
+  stayAwake()
+  SpeechRecognition.startListening({ continuous: true })
+}
+
+const stopListening = async () => {
+  wakeLock.release()
+    .then(() => {
+      wakeLock = null
+    })
+  SpeechRecognition.stopListening()
 }
 const Recipe = ({ recipe }) => {
-  const { ingredients, title, steps } = recipe;
-  const [message, setMessage] = useState("");
-  const [currentStep, setStep] = useState(0);
-  const [focusedId, setFocusId] = useState();
-  const refEl = useRef(null);
+  const { ingredients, title, steps } = recipe
+  const [message] = useState('')
+  const [currentStep, setStep] = useState(0)
+  const [focusedId, setFocusId] = useState()
+  const refEl = useRef(null)
   useEffect(() =>
     refEl && refEl.current ? refEl.current.scrollIntoView() : null
-  );
-  useEffect(() => stayAwake());
+  )
+  useEffect(() => stayAwake())
 
   const SECTION = {
-    STEP: "step",
-    INGREDIENT: "ingredient",
-  };
+    STEP: 'step',
+    INGREDIENT: 'ingredient'
+  }
 
   const setFocus = (section, key) => {
-    setFocusId(`${section}-${key}`);
-  };
+    setFocusId(`${section}-${key}`)
+  }
 
   const goToStep = (stepNumber) => {
-    console.log('go to step:', `'${stepNumber}'`, Number(stepNumber));
-    setStep(Number(stepNumber));
-    setFocus(SECTION.STEP, stepNumber);
-  };
+    console.log('go to step:', `'${stepNumber}'`, Number(stepNumber))
+    setStep(Number(stepNumber))
+    setFocus(SECTION.STEP, stepNumber)
+  }
 
   const goToIngredient = (ingredient) => {
     setFocus(SECTION.INGREDIENT, ingredient)
@@ -51,54 +64,54 @@ const Recipe = ({ recipe }) => {
 
   const commands = [
     {
-      command: "Go to *",
+      command: 'Go to *',
       // command: ["Step *", "Top *", "Stop *"],
-      callback: goToStep,
+      callback: goToStep
       // isFuzzyMatch: true,
       // fuzzyMatchingThreshold: 0.2,
       // bestMatchOnly: true,
     },
     {
-      command: "Step *",
+      command: 'Step *',
       // command: ["Step *", "Top *", "Stop *"],
-      callback: goToStep,
+      callback: goToStep
       // isFuzzyMatch: true,
       // fuzzyMatchingThreshold: 0.2,
       // bestMatchOnly: true,
     },
     {
-      command: "Stop *",
-      callback: goToStep,
+      command: 'Stop *',
+      callback: goToStep
     },
     {
-      command: "Top *",
+      command: 'Top *',
       // command: ["Step *", "Top *", "Stop *"],
-      callback: goToStep,
+      callback: goToStep
       // isFuzzyMatch: true,
       // fuzzyMatchingThreshold: 0.2,
       // bestMatchOnly: true,
     },
     {
-      command: "How much *",
-      callback: goToIngredient,
+      command: 'How much *',
+      callback: goToIngredient
     },
     {
-      command: "How many *",
-      callback: goToIngredient,
+      command: 'How many *',
+      callback: goToIngredient
     },
     {
-      command: ["next", "okay"],
+      command: ['next', 'okay'],
       callback: () => goToStep(currentStep + 1),
       isFuzzyMatch: true,
       fuzzyMatchingThreshold: 0.2,
-      bestMatchOnly: true,
+      bestMatchOnly: true
     },
     {
-      command: ["back",],
+      command: ['back'],
       callback: () => goToStep(currentStep - 1),
       isFuzzyMatch: true,
       fuzzyMatchingThreshold: 0.2,
-      bestMatchOnly: true,
+      bestMatchOnly: true
     },
     // {
     //   command: "The weather is :condition today",
@@ -135,22 +148,20 @@ const Recipe = ({ recipe }) => {
     //   bestMatchOnly: true,
     // },
     {
-      command: "clear",
-      callback: ({ resetTranscript }) => resetTranscript(),
-    },
-  ];
+      command: 'clear',
+      callback: ({ resetTranscript }) => resetTranscript()
+    }
+  ]
 
-  const { transcript } = useSpeechRecognition({ commands });
+  const { transcript } = useSpeechRecognition({ commands })
 
   if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
-    return <p>Your browser doesn't support this</p>;
+    return <p>Your browser doesn't support this</p>
   }
 
-
-
   return (<>
-    <div class="two-col">
-      <div class="side">
+    <div className="two-col">
+      <div className="side">
         <h2>{title}</h2>
         <Ingredients
           refEl={refEl}
@@ -163,13 +174,13 @@ const Recipe = ({ recipe }) => {
           steps={steps}
         />
       </div>
-      <div class="side">
+      <div className="side">
         <button
-          onClick={() => SpeechRecognition.startListening({ continuous: true })}
+          onClick={startListening}
         >
           Start
         </button>
-        <button onClick={SpeechRecognition.stopListening}>Stop</button>
+        <button onClick={stopListening}>Stop</button>
         <button onClick={() => goToStep(currentStep + 1)}>Step</button>
         <button onClick={() => goToIngredient('eggs')}>Ingredient</button>
         <p>Current step: {currentStep}</p>
@@ -178,6 +189,6 @@ const Recipe = ({ recipe }) => {
       </div>
     </div>
     </>
-  );
-};
-export default Recipe;
+  )
+}
+export default Recipe
