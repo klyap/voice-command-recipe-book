@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState, useRef } from 'react'
 import SpeechRecognition, {
   useSpeechRecognition
@@ -156,7 +157,7 @@ const Recipe = ({ recipe }) => {
   const { transcript } = useSpeechRecognition({ commands })
 
   if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
-    return <p>Your browser doesn't support this</p>
+    return <p>Your browser does not support this</p>
   }
 
   return (<>
